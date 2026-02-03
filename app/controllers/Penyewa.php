@@ -2,7 +2,7 @@
 
 class Penyewa extends Controller {
     
-    private $api_url = 'https://unopiatic-lucinda-unsuspended.ngrok-free.dev/BackendTubesLaragon/penyewas.php'; 
+    private $api_url = BASE_API . '/penyewas.php'; 
 
     public function index() {
         $data['penyewas'] = $this->callAPI('GET', $this->api_url);

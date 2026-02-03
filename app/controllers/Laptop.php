@@ -2,7 +2,7 @@
 
 class Laptop extends Controller {
     
-    private $api_url = 'https://unopiatic-lucinda-unsuspended.ngrok-free.dev/BackendTubesLaragon/laptops.php'; 
+    private $api_url = BASE_API . '/laptops.php'; 
 
     public function index() {
         $data['laptops'] = $this->callAPI('GET', $this->api_url);
@@ -27,14 +27,16 @@ class Laptop extends Controller {
     }
 
     public function edit($id) {
-        $allLaptops = $this->callAPI('GET', $this->api_url);
-        $laptop = null;
-        foreach($allLaptops as $l) {
-            if($l['id_laptop'] == $id) {
-                $laptop = $l;
-                break;
-            }
+        $laptop = $this->callAPI('GET', $this->api_url . '?id=' . $id);
+
+        if (!$laptop || empty($laptop)) {
+            echo "<script>
+                    alert('Data laptop tidak ditemukan!');
+                    window.location.href='" . BASEURL . "/laptop';
+                </script>";
+            exit;
         }
+
         $data['laptop'] = $laptop;
         $this->view('laptop/edit', $data);
     }

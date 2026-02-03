@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Inter', sans-serif; }</style>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
+
 <body class="bg-gray-100 text-gray-800 antialiased">
 
     <nav class="bg-white border-b border-gray-200 fixed w-full z-30 top-0">
@@ -39,12 +45,12 @@
         <div class="bg-white rounded-3xl shadow-xl p-8 border border-gray-100">
             <form action="<?= BASEURL; ?>/transaksi/simpan" method="POST">
                 <div class="grid grid-cols-1 gap-6">
-                    
+
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Pilih Penyewa</label>
                         <select name="id_penyewa" required class="w-full border border-gray-200 rounded-xl py-3 px-4 bg-gray-50 focus:bg-white focus:outline-none">
                             <option value="">-- Cari Nama Penyewa --</option>
-                            <?php foreach($data['penyewas'] as $p): ?>
+                            <?php foreach ($data['penyewas'] as $p): ?>
                                 <option value="<?= $p['id_penyewa']; ?>"><?= $p['nama']; ?> (<?= $p['telp']; ?>)</option>
                             <?php endforeach; ?>
                         </select>
@@ -53,12 +59,12 @@
 
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Pilih Unit Laptop</label>
-                        <select name="id_laptop" id="laptopSelect" required onchange="hitungTotal()" 
-                                class="w-full border border-gray-200 rounded-xl py-3 px-4 bg-gray-50 focus:bg-white focus:outline-none">
+                        <select name="id_laptop" id="laptopSelect" required onchange="hitungTotal()"
+                            class="w-full border border-gray-200 rounded-xl py-3 px-4 bg-gray-50 focus:bg-white focus:outline-none">
                             <option value="" data-price="0">-- Pilih Laptop Available --</option>
-                            <?php foreach($data['laptops'] as $l): ?>
+                            <?php foreach ($data['laptops'] as $l): ?>
                                 <option value="<?= $l['id_laptop']; ?>" data-price="<?= $l['harga_sewa']; ?>">
-                                    <?= $l['brand']; ?> <?= $l['model']; ?> - Rp <?= number_format($l['harga_sewa']); ?>/hari
+                                    <?= $l['brand']; ?> <?= $l['model']; ?> - Rp <?= number_format($l['harga_sewa']); ?>/bulan
                                 </option>
                             <?php endforeach; ?>
                         </select>
@@ -68,12 +74,12 @@
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Mulai</label>
                             <input type="date" name="tgl_mulai" id="tglMulai" required onchange="hitungTotal()"
-                                   class="w-full border border-gray-200 rounded-xl py-3 px-4 bg-gray-50 focus:bg-white focus:outline-none">
+                                class="w-full border border-gray-200 rounded-xl py-3 px-4 bg-gray-50 focus:bg-white focus:outline-none">
                         </div>
                         <div>
                             <label class="block text-sm font-bold text-gray-700 mb-2">Tanggal Selesai</label>
                             <input type="date" name="tgl_selesai" id="tglSelesai" required onchange="hitungTotal()"
-                                   class="w-full border border-gray-200 rounded-xl py-3 px-4 bg-gray-50 focus:bg-white focus:outline-none">
+                                class="w-full border border-gray-200 rounded-xl py-3 px-4 bg-gray-50 focus:bg-white focus:outline-none">
                         </div>
                     </div>
 
@@ -83,6 +89,7 @@
                             <p class="text-xs text-gray-400" id="infoDurasi">0 Hari</p>
                         </div>
                         <div class="text-2xl font-extrabold text-black" id="displayHarga">Rp 0</div>
+                        <input type="hidden" name="total_harga_hidden" id="total_harga_hidden" value="0">
                     </div>
 
                     <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100 mt-4">
@@ -100,31 +107,46 @@
     <script>
         function hitungTotal() {
             const laptopSelect = document.getElementById('laptopSelect');
-            const pricePerDay = laptopSelect.options[laptopSelect.selectedIndex].getAttribute('data-price') || 0;
-            
+
+            // Pastikan value 'data-price' di HTML kamu adalah HARGA BULANAN, bukan harian lagi
+            const pricePerMonth = laptopSelect.options[laptopSelect.selectedIndex].getAttribute('data-price') || 0;
+
             const start = document.getElementById('tglMulai').value;
             const end = document.getElementById('tglSelesai').value;
 
-            if(start && end && pricePerDay > 0) {
+            if (start && end && pricePerMonth > 0) {
                 const date1 = new Date(start);
                 const date2 = new Date(end);
-                
-                // Hitung selisih waktu
+
+                // 1. Hitung selisih waktu (milidetik) lalu ubah ke Hari
                 const diffTime = Math.abs(date2 - date1);
-                const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-                
+                let diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
                 // Minimal 1 hari kalau tanggal sama
-                const days = diffDays === 0 ? 1 : diffDays;
+                if (diffDays === 0) diffDays = 1;
 
-                const total = days * pricePerDay;
+                // 2. LOGIC BARU: Konversi ke Bulan (Round Up)
+                // Asumsi 1 Bulan = 30 Hari
+                // Contoh: 20 hari / 30 = 0.66 -> Math.ceil jadi 1 Bulan
+                // Contoh: 34 hari / 30 = 1.13 -> Math.ceil jadi 2 Bulan
+                const durationMonths = Math.ceil(diffDays / 30);
 
-                document.getElementById('infoDurasi').innerText = days + " Hari";
+                // 3. Hitung Total
+                const total = durationMonths * pricePerMonth;
+
+                // 4. Tampilkan ke User
+                // Saya tambahkan detail harinya di dalam kurung biar user gak bingung
+                document.getElementById('infoDurasi').innerText = durationMonths + " Bulan (" + diffDays + " Hari)";
                 document.getElementById('displayHarga').innerText = "Rp " + new Intl.NumberFormat('id-ID').format(total);
+                document.getElementById('total_harga_hidden').value = total;
+
             } else {
-                document.getElementById('infoDurasi').innerText = "0 Hari";
+                document.getElementById('infoDurasi').innerText = "-";
                 document.getElementById('displayHarga').innerText = "Rp 0";
+                document.getElementById('total_harga_hidden').value = 0;
             }
         }
     </script>
 </body>
+
 </html>

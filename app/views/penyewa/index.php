@@ -7,7 +7,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Inter', sans-serif; }</style>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }    
+    </style>
 </head>
 <body class="bg-gray-100 text-gray-800 antialiased">
 
@@ -27,7 +45,7 @@
             </div>
         </div>
     </nav>
-    <div class="container mx-auto px-4 py-10 max-w-7xl mt-20">
+    <div class="container mx-auto px-4 py-10 max-w-7xl mt-20 animate-fade-in-up">
         
         <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
             <div>
