@@ -8,12 +8,14 @@ class Dashboard extends Controller
         $transaksi = $this->callAPI('GET', BASE_API . '/penyewaans.php');
         $penyewa = $this->callAPI('GET', BASE_API . '/penyewas.php');
 
-        $data['total_laptop'] = count($laptops);
-        $data['tersedia'] = count(array_filter($laptops, fn($l) => $l['status'] == 'available'));
-        $data['total_transaksi'] = count($transaksi);
-        $data['transaksi_aktif'] = count(array_filter($transaksi, fn($t) => $t['status'] == 'ongoing'));
-        $data['total_pendapatan'] = array_sum(array_column($transaksi, 'harga')) + array_sum(array_column($transaksi, 'denda'));
-
+        if ($laptops && $transaksi && $penyewa) {
+            $data['total_laptop'] = count($laptops);
+            $data['tersedia'] = count(array_filter($laptops, fn($l) => $l['status'] == 'available'));
+            $data['total_transaksi'] = count($transaksi);
+            $data['transaksi_aktif'] = count(array_filter($transaksi, fn($t) => $t['status'] == 'ongoing'));
+            $data['total_pendapatan'] = array_sum(array_column($transaksi, 'harga')) + array_sum(array_column($transaksi, 'denda'));
+        }
+        else $data = [];
         $this->view('dashboard/index', $data);
     }
 

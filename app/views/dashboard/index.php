@@ -9,20 +9,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* 1. Body berdiri sendiri */
         body {
             font-family: 'Inter', sans-serif;
         }
 
-        /* 2. Class animasi dipisah (JANGAN di dalam body) */
         .animate-fade-in-up {
             animation: fadeInUp 0.8s ease-out forwards;
-            /* Tambah forwards biar posisi akhir tersimpan */
             opacity: 0;
-            /* Mulai dari transparan */
         }
 
-        /* 3. Keyframes juga dipisah */
         @keyframes fadeInUp {
             from {
                 opacity: 0;

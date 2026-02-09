@@ -2,7 +2,6 @@
 
 class Transaksi extends Controller
 {
-
     private $api_url = BASE_API;
 
     public function index()
@@ -34,7 +33,7 @@ class Transaksi extends Controller
             'tgl_mulai'   => $_POST['tgl_mulai'],
             'tgl_selesai' => $_POST['tgl_selesai'],
             'status'      => 'ongoing',
-            'harga'       => (int)$_POST['total_harga_hidden'] 
+            'harga'       => (int)$_POST['total_harga_hidden']
         ];
 
         $this->callAPI('POST', $this->api_url . '/penyewaans.php', $postData);
@@ -69,13 +68,27 @@ class Transaksi extends Controller
 
     public function export()
     {
-        $data = $this->callAPI('GET', $this->api_url . '/penyewaans.php'); // Ambil semua data transaksi
+        $allData = $this->callAPI('GET', $this->api_url . '/penyewaans.php');
+
+        if (isset($_POST['start_date']) && isset($_POST['end_date'])) {
+            $start = $_POST['start_date'];
+            $end   = $_POST['end_date'];
+            $filenameDate = $start . '_sd_' . $end;
+
+            // FILTER LOGIC:
+            $data = array_filter($allData, function ($row) use ($start, $end) {
+                return ($row['tgl_mulai'] >= $start && $row['tgl_mulai'] <= $end);
+            });
+        } else {
+            $data = $allData;
+            $filenameDate = date('Y-m-d');
+        }
 
         header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="Laporan_Rental_' . date('Y-m-d') . '.csv"');
+        header('Content-Disposition: attachment; filename="Laporan_Rental_' . $filenameDate . '.csv"');
 
         $output = fopen('php://output', 'w');
-        // Header Kolom di Excel nanti
+
         fputcsv($output, ['Kode Sewa', 'Penyewa', 'Laptop', 'Tgl Mulai', 'Tgl Selesai', 'Harga', 'Denda', 'Status']);
 
         foreach ($data as $row) {
@@ -90,6 +103,7 @@ class Transaksi extends Controller
                 $row['status']
             ]);
         }
+
         fclose($output);
         exit;
     }
