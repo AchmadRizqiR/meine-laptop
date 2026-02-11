@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,13 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>body { font-family: 'Inter', sans-serif; }</style>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
 </head>
+
 <body class="bg-gray-100 text-gray-800 antialiased">
 
     <nav class="bg-white border-b border-gray-200 fixed w-full z-30 top-0">
@@ -44,20 +50,17 @@
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Brand</label>
-                        <select name="brand" class="w-full border border-gray-200 rounded-xl py-3 px-4 bg-gray-50 focus:bg-white focus:outline-none">
-                            <option value="Asus">Asus</option>
-                            <option value="Lenovo">Lenovo</option>
-                            <option value="MacBook">MacBook</option>
-                            <option value="HP">HP</option>
-                            <option value="Dell">Dell</option>
-                        </select>
+                        <input type="text"
+                            name="brand"
+                            required
+                            class="w-full border border-gray-200 rounded-xl py-3 px-4 bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-black transition-all">
                     </div>
                     <div>
                         <label class="block text-sm font-bold text-gray-700 mb-2">Model / Tipe</label>
                         <input type="text" name="model" required class="w-full border border-gray-200 rounded-xl py-3 px-4 bg-gray-50 focus:bg-white focus:outline-none">
                     </div>
                     <div>
-                        <label class="block text-sm font-bold text-gray-700 mb-2">Harga Sewa (Per Hari)</label>
+                        <label class="block text-sm font-bold text-gray-700 mb-2">Harga Sewa (Per Bulan)</label>
                         <div class="relative">
                             <span class="absolute left-4 top-3.5 text-gray-400 font-bold">Rp</span>
                             <input type="number" name="harga_sewa" required class="w-full border border-gray-200 rounded-xl py-3 pl-12 pr-4 bg-gray-50 focus:bg-white focus:outline-none">
@@ -87,4 +90,5 @@
         </div>
     </div>
 </body>
+
 </html>
