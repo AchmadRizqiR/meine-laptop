@@ -23,7 +23,7 @@
                 <a href="<?= BASEURL; ?>/transaksi" class="hover:text-black transition">Transaksi</a>
             </div>
             <div>
-                <a href="<?= BASEURL; ?>/login/logout" class="bg-gray-100 text-gray-900 px-5 py-2.5 rounded-full font-bold text-xs hover:bg-red-50 hover:text-red-600 transition">Log Out</a>
+                <a href="<?= BASEURL; ?>/home" class="bg-gray-100 text-gray-900 px-5 py-2.5 rounded-full font-bold text-xs hover:bg-red-50 hover:text-red-600 transition">keluar</a>
             </div>
         </div>
     </nav>

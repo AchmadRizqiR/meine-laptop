@@ -3,7 +3,7 @@
 define('BASEURL', 'http://localhost/PTI/client_php/public');
 
 // Ini isi Url REST API
-define('BASE_API', 'https://unopiatic-lucinda-unsuspended.ngrok-free.dev/BackendTubesLaragon');
+define('BASE_API', 'https://unopiatic-lucinda-unsuspended.ngrok-free.dev/BackendTubesLaragon/api');
 
 // Debug dengan url REST API lokal
 // define('BASE_API', 'http://localhost/PTI/server_backend/api/api');
